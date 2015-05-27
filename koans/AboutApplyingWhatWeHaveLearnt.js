@@ -40,9 +40,9 @@ describe("About Applying What We Have Learnt", function() {
       var productsICanEat = [];
 
       /* solve using filter() & all() / any() */
-      products.filter(function(x){
-        return !x.ingredients.any("mushrooms") && !x.containsNuts;
-      }
+      productsICanEat = products.filter(function(x){
+        return (!_.any(x["ingredients"], function(ingredient){return ingredient === "mushrooms"}) && !x.containsNuts);
+      });
       expect(productsICanEat.length).toBe(1);
   });
 
@@ -62,12 +62,12 @@ describe("About Applying What We Have Learnt", function() {
 
   it("should add all the natural numbers below 1000 that are multiples of 3 or 5 (functional)", function () {
 
-    var sum = range(1000).reduce(function(curr, next){
-      if (next % 3 === 0 || next % 5 === 0) return curr+next}
-        );    /* try chaining range() and reduce() */
+  var sum = _.range(1000).reduce(function(curr, next){
+      if (next % 3 === 0 || next % 5 === 0) {return curr+next;}
+      else {return curr+0;}});    /* try chaining range() and reduce() */
 
-    expect(233168).toBe(sum);
-  });
+      expect(233168).toBe(sum);
+    });
 
   /*********************************************************************************/
    it("should count the ingredient occurrence (imperative)", function () {
@@ -84,11 +84,20 @@ describe("About Applying What We Have Learnt", function() {
 
   it("should count the ingredient occurrence (functional)", function () {
     var ingredientCount = { "{ingredient name}": 0 };
+    return _.flatten(products.map(function(pizza){
+        for (var key in pizza){
+          if (key === "ingredients"){return pizza[key];}
+        } 
+        }))
+    .reduce(function(count, ingredient){
+          ingredientCount[ingredient] ? ingredientCount[ingredient] += 1: ingredientCount[ingredient] = 1;
+          return ingredientCount;
+      });
+  });
 
     /* chain() together map(), flatten() and reduce() */
 
-    expect(ingredientCount['mushrooms']).toBe(FILL_ME_IN);
-  });
+    expect(ingredientCount['mushrooms']).toBe(2);
 
   /*********************************************************************************/
   /* UNCOMMENT FOR EXTRA CREDIT */
